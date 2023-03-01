@@ -9,7 +9,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_machine"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/item_machine" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -17,12 +20,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:backgroundTint="@color/colorPrimary"
+        android:backgroundTint="?colorPrimary"
+        app:backgroundTint="?colorPrimary"
         android:contentDescription="@string/add_machine"
-        android:overScrollMode="never"
         android:src="@drawable/ic_qr_code_scanner"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/white" />
+        app:tint="?colorOnPrimary" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

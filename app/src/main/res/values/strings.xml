@@ -6,4 +6,7 @@
     <string name="cancel">Annuler</string>
     <string name="save">Enregistrer</string>
     <string name="machines">Machines</string>
+    <string name="scan_your_code_on_your_machine">Scanner le QR Code présent sur votre machine Mixolo</string>
+    <string name="delete_confirmation_machines">"Êtes-vous sûr de vouloir supprimer %d machine(s) ? "</string>
+    <string name="delete_confirmation">Confirmer la suppression</string>
 </resources>

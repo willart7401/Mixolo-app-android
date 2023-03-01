@@ -22,4 +22,8 @@ object MachinesRepository {
     fun add(machine: Machine) {
         machines.value += machine
     }
+
+    fun delete(machines: List<Machine>) {
+        this.machines.value -= machines
+    }
 }
