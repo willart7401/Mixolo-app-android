@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "266175036678",
+    "project_id": "mixolo-95131",
+    "storage_bucket": "mixolo-95131.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:266175036678:android:2a87cb9875d8518e5a3287",
+        "android_client_info": {
+          "package_name": "fr.willban.mixolo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "266175036678-i39deh0tonjuh0v7lkj9vop6trgqnerg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fr.willban.mixolo",
+            "certificate_hash": "60901421dcd21a7fec2224757ecd34a378457ec1"
+          }
+        },
+        {
+          "client_id": "266175036678-fauna48b8jt4l3m04vjn49s4uc08dcj6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfcvFt7D_dZioiJfbyp5IdeedEHDwGz_w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "266175036678-fauna48b8jt4l3m04vjn49s4uc08dcj6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
