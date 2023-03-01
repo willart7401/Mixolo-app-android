@@ -44,7 +44,7 @@ class SignInActivity : AppCompatActivity() {
                     Log.e("FirebaseUser", "FirebaseUser is null")
                 }
 
-                startActivity(Intent(this, MainActivity::class.java))
+                startActivity(Intent(this, MachineActivity::class.java))
                 finish()
             }
             else -> Log.e(TAG, "FAILED CONNECT FIREBASE : ${result.resultCode}")
