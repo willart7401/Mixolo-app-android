@@ -5,7 +5,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 
-const val TAG = "Mixolo"
+const val TAG = "DEBUG-Mixolo"
 
 class App : Application() {
 

@@ -1,4 +1,4 @@
-package fr.willban.mixolo.ui
+package fr.willban.mixolo.ui.signin
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +11,7 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import fr.willban.mixolo.R
 import fr.willban.mixolo.TAG
+import fr.willban.mixolo.ui.machine.MachineActivity
 
 class SignInActivity : AppCompatActivity() {
 

@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Mixolo</string>
-    <string name="delete">Delete</string>
+    <string name="add_machine">Ajouter une machine</string>
+    <string name="machine_name">Nom de la machine</string>
+    <string name="delete">Supprimer</string>
+    <string name="cancel">Annuler</string>
+    <string name="save">Enregistrer</string>
+    <string name="machines">Machines</string>
 </resources>

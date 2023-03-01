@@ -52,5 +52,8 @@ dependencies {
     //endregion
 
     //Lifecycle
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1' // LifecycleScope
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
+
+    //QRCode scanner
+    implementation("io.github.g00fy2.quickie:quickie-bundled:1.6.0")
 }
