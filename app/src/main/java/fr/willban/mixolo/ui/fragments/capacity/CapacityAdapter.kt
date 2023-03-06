@@ -1,5 +1,6 @@
 package fr.willban.mixolo.ui.fragments.capacity
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,8 +8,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import fr.willban.mixolo.R
 import fr.willban.mixolo.data.model.Container
+import fr.willban.mixolo.util.wave.MultiWaveHeader
 
-class CapacityAdapter(private val onClickListener: () -> Unit) : RecyclerView.Adapter<CapacityAdapter.ViewHolder>() {
+class CapacityAdapter(private val onClickListener: (Container) -> Unit) : RecyclerView.Adapter<CapacityAdapter.ViewHolder>() {
 
     private var containers: List<Container> = emptyList()
 
@@ -22,6 +24,13 @@ class CapacityAdapter(private val onClickListener: () -> Unit) : RecyclerView.Ad
         val container = containers[position]
 
         holder.textView.text = container.name
+        holder.waterWaveView.setWaves("0,0,1,1,-26")
+        holder.waterWaveView.progress = container.remainingAmount / container.totalAmount.toFloat()
+        Log.e("test", "${container.remainingAmount / container.totalAmount.toFloat()}")
+
+        holder.itemView.setOnClickListener {
+            onClickListener(container)
+        }
     }
 
     fun refreshMachines(containers: List<Container>) {
@@ -30,7 +39,7 @@ class CapacityAdapter(private val onClickListener: () -> Unit) : RecyclerView.Ad
     }
 
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
-//        val capacityLevel: WaterWaveView = itemView.findViewById(R.id.item_capacity_level)
+        val waterWaveView: MultiWaveHeader = itemView.findViewById(R.id.water_wave_view)
         val textView: TextView = itemView.findViewById(R.id.item_capacity_name)
     }
 }

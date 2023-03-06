@@ -1,10 +1,10 @@
 package fr.willban.mixolo.ui.fragments.capacity
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -38,11 +38,16 @@ class CapacityFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         adapter = CapacityAdapter(::onClickListener)
         recyclerView.adapter = adapter
-        adapter.refreshMachines(listOf(Container(1, "Vodka", 2, 2)))
+        adapter.refreshMachines(
+            listOf(
+                Container(1, "Vodka", 100, 100),
+                Container(1, "Jus d'orange", 100, 50),
+                Container(1, "Pastis", 100, 1)
+            )
+        )
     }
 
-    private fun onClickListener() {
+    private fun onClickListener(container: Container) {
 
     }
 }
-
