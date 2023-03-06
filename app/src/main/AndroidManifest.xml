@@ -16,34 +16,23 @@
         android:theme="@style/Theme.Mixolo"
         tools:targetApi="31">
 
-        <!--        <activity-->
-        <!--            android:name=".ui.machine.MachineActivity"-->
-        <!--            android:exported="false" />-->
-
-        <!--        <activity-->
-        <!--            android:name=".ui.signin.SignInActivity"-->
-        <!--            android:exported="true">-->
-        <!--            <intent-filter>-->
-        <!--                <action android:name="android.intent.action.MAIN" />-->
-
-        <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-        <!--            </intent-filter>-->
-        <!--        </activity>-->
+        <activity
+            android:name=".ui.activities.signin.SignInActivity"
+            android:exported="false" />
 
         <activity
-            android:name=".ui.machine.MachineActivity"
-            android:exported="true">
+            android:name=".ui.activities.detail.MachineDetailActivity"
+            android:exported="false" />
 
+        <activity
+            android:name=".ui.activities.machine.MachinesActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".ui.signin.SignInActivity"
-            android:exported="false" />
 
     </application>
 

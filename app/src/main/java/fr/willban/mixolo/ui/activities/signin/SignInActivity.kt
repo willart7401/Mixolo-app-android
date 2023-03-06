@@ -1,4 +1,4 @@
-package fr.willban.mixolo.ui.signin
+package fr.willban.mixolo.ui.activities.signin
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +11,7 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import fr.willban.mixolo.R
 import fr.willban.mixolo.TAG
-import fr.willban.mixolo.ui.machine.MachineActivity
+import fr.willban.mixolo.ui.activities.machine.MachinesActivity
 
 class SignInActivity : AppCompatActivity() {
 
@@ -45,7 +45,7 @@ class SignInActivity : AppCompatActivity() {
                     Log.e("FirebaseUser", "FirebaseUser is null")
                 }
 
-                startActivity(Intent(this, MachineActivity::class.java))
+                startActivity(Intent(this, MachinesActivity::class.java))
                 finish()
             }
             else -> Log.e(TAG, "FAILED CONNECT FIREBASE : ${result.resultCode}")

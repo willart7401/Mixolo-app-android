@@ -9,4 +9,7 @@
     <string name="scan_your_code_on_your_machine">Scanner le QR Code présent sur votre machine Mixolo</string>
     <string name="delete_confirmation_machines">"Êtes-vous sûr de vouloir supprimer %d machine(s) ? "</string>
     <string name="delete_confirmation">Confirmer la suppression</string>
+    <string name="cocktail">Cocktails</string>
+    <string name="capacities">Capacités</string>
+    <string name="status">Statut</string>
 </resources>

@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -56,4 +57,13 @@ dependencies {
 
     //QRCode scanner
     implementation("io.github.g00fy2.quickie:quickie-bundled:1.6.0")
+
+    //Navigation and fragments
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+
+    //Room
+    implementation "androidx.room:room-runtime:2.5.0"
+    kapt "androidx.room:room-compiler:2.5.0"
+    implementation "androidx.room:room-ktx:2.5.0"
 }

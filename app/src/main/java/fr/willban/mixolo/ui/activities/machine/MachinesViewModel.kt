@@ -1,4 +1,4 @@
-package fr.willban.mixolo.ui.machine
+package fr.willban.mixolo.ui.activities.machine
 
 import androidx.lifecycle.ViewModel
 import fr.willban.mixolo.data.model.Machine

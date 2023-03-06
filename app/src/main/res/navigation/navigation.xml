@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@+id/capacityFragment">
+
+    <fragment
+        android:id="@+id/capacityFragment"
+        android:name="fr.willban.mixolo.ui.fragments.capacity.CapacityFragment"
+        android:label="@string/capacities"
+        tools:layout="@layout/fragment_capacity" />
+
+    <fragment
+        android:id="@+id/cocktailFragment"
+        android:name="fr.willban.mixolo.ui.fragments.cocktail.CocktailFragment"
+        android:label="@string/cocktail"
+        tools:layout="@layout/fragment_cocktail" />
+
+    <fragment
+        android:id="@+id/statusFragment"
+        android:name="fr.willban.mixolo.ui.fragments.status.StatusFragment"
+        android:label="@string/status"
+        tools:layout="@layout/fragment_status" />
+
+</navigation>

@@ -1,5 +1,6 @@
-package fr.willban.mixolo.ui.machine
+package fr.willban.mixolo.ui.activities.machine
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -15,12 +16,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import fr.willban.mixolo.R
 import fr.willban.mixolo.data.model.Machine
+import fr.willban.mixolo.ui.activities.detail.MachineDetailActivity
 import io.github.g00fy2.quickie.QRResult.*
 import io.github.g00fy2.quickie.ScanCustomCode
 import io.github.g00fy2.quickie.config.ScannerConfig
 import kotlinx.coroutines.launch
 
-class MachineActivity : AppCompatActivity() {
+class MachinesActivity : AppCompatActivity() {
 
     private var isDeleteMode: Boolean = false
     private lateinit var recyclerview: RecyclerView
@@ -31,7 +33,7 @@ class MachineActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_machine)
+        setContentView(R.layout.activity_machines)
 
         initViews()
         setupViews()
@@ -94,7 +96,9 @@ class MachineActivity : AppCompatActivity() {
     }
 
     private fun onMachineClickListener(machine: Machine) {
-        //TODO on machine click
+        val intent = Intent(applicationContext, MachineDetailActivity::class.java)
+        intent.putExtra("machineId", machine.id)
+        startActivity(intent)
     }
 
     private fun onDeleteModeChanged(isDeleteMode: Boolean) {
