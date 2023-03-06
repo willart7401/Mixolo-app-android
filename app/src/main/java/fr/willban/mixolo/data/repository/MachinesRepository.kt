@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 object MachinesRepository {
 
-    //TODO remoove temp mock
+    //TODO remove temp mock
     private var machines = MutableStateFlow(
         listOf(
             Machine("1", "Machine 1", emptyList()),

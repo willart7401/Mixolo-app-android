@@ -50,7 +50,7 @@ class MultiWaveHeader @JvmOverloads constructor(context: Context, attrs: Attribu
         isEnableFullScreen = ta.getBoolean(R.styleable.MultiWaveHeader_mwhEnableFullScreen, false)
         mCornerRadius = ta.getDimensionPixelOffset(R.styleable.MultiWaveHeader_mwhCornerRadius, WaveUtil.dp2px(25f)).toFloat()
         mShape = ShapeType.values()[ta.getInt(R.styleable.MultiWaveHeader_mwhShape, mShape!!.ordinal)]
-        mCurProgress = ta.getFloat(R.styleable.MultiWaveHeader_mwhProgress, 1f)
+        mCurProgress = ta.getFloat(R.styleable.MultiWaveHeader_mwhProgress, 0f)
         mProgress = mCurProgress
         if (ta.hasValue(R.styleable.MultiWaveHeader_mwhWaves)) {
             tag = ta.getString(R.styleable.MultiWaveHeader_mwhWaves)
