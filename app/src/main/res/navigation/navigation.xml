@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/capacityFragment"
-        android:name="fr.willban.mixolo.ui.fragments.capacity.CapacityFragment"
+        android:name="fr.willban.mixolo.ui.fragments.container.ContainerFragment"
         android:label="@string/capacities"
         tools:layout="@layout/fragment_capacity" />
 

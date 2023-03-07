@@ -1,4 +1,4 @@
-package fr.willban.mixolo.ui.fragments.capacity
+package fr.willban.mixolo.ui.fragments.container
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +11,7 @@ import fr.willban.mixolo.data.model.Container
 import fr.willban.mixolo.util.px
 import fr.willban.mixolo.util.wave.MultiWaveHeader
 
-class CapacityAdapter(private val onClickListener: (Container) -> Unit) : RecyclerView.Adapter<CapacityAdapter.ViewHolder>() {
+class ContainerAdapter(private val onClickListener: (Container) -> Unit) : RecyclerView.Adapter<ContainerAdapter.ViewHolder>() {
 
     private var containers: List<Container> = emptyList()
 
@@ -28,10 +28,11 @@ class CapacityAdapter(private val onClickListener: (Container) -> Unit) : Recycl
 
         holder.containerId.text = container.id.toString()
         holder.textView.text = container.name
+
         holder.waterWaveView.setWaves("0,0,1,1,-26")
         holder.waterWaveView.scaleY = -1f
         holder.waterWaveView.progress = container.remainingAmount / container.totalAmount.toFloat()
-        holder.waterWaveView.velocity = if (containers.size > 3) 4f else 8f
+        holder.waterWaveView.velocity *= if (containers.size > 3) 0.5f else 1f
 
         holder.itemView.setOnClickListener {
             onClickListener(container)

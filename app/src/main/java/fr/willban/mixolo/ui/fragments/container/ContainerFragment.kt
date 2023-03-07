@@ -1,4 +1,4 @@
-package fr.willban.mixolo.ui.fragments.capacity
+package fr.willban.mixolo.ui.fragments.container
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,15 +16,15 @@ import fr.willban.mixolo.R
 import fr.willban.mixolo.data.model.Container
 import kotlinx.coroutines.launch
 
-class CapacityFragment : Fragment() {
+class ContainerFragment : Fragment() {
 
-    private lateinit var adapter: CapacityAdapter
+    private lateinit var adapter: ContainerAdapter
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewModel: CapacityViewModel
+    private lateinit var viewModel: ContainerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity())[CapacityViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[ContainerViewModel::class.java]
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -46,15 +46,18 @@ class CapacityFragment : Fragment() {
 
     private fun initRecyclerView(view: View) {
         recyclerView = view.findViewById(R.id.recyclerview_capacity)
-
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = CapacityAdapter(::showAlertDialogEditContainer)
+        adapter = ContainerAdapter(::onClickListener)
         recyclerView.adapter = adapter
     }
 
+    private fun onClickListener(container: Container){
+        showAlertDialogEditContainer(container)
+    }
+
     private fun showAlertDialogEditContainer(container: Container) {
-        val view = layoutInflater.inflate(R.layout.dialog_add_machine, null)
-        val editText: EditText = view.findViewById(R.id.dialog_add_machine_editText)
+        val view = layoutInflater.inflate(R.layout.dialog_simple_edittext, null)
+        val editText: EditText = view.findViewById(R.id.dialog_simple_edittext)
         editText.setText(container.name)
 
         AlertDialog.Builder(requireContext())

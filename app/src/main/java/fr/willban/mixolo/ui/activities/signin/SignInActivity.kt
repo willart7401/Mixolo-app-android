@@ -11,7 +11,7 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import fr.willban.mixolo.R
 import fr.willban.mixolo.TAG
-import fr.willban.mixolo.ui.activities.machine.MachinesActivity
+import fr.willban.mixolo.ui.activities.home.MachinesActivity
 
 class SignInActivity : AppCompatActivity() {
 

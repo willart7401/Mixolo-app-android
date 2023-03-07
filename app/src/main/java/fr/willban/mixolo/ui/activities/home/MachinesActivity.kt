@@ -1,4 +1,4 @@
-package fr.willban.mixolo.ui.activities.machine
+package fr.willban.mixolo.ui.activities.home
 
 import android.content.Intent
 import android.os.Bundle
@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import fr.willban.mixolo.R
 import fr.willban.mixolo.data.model.LocalMachine
-import fr.willban.mixolo.ui.activities.detail.MachineDetailActivity
+import fr.willban.mixolo.ui.activities.machine.MachineDetailActivity
 import io.github.g00fy2.quickie.QRResult.*
 import io.github.g00fy2.quickie.ScanCustomCode
 import io.github.g00fy2.quickie.config.ScannerConfig
@@ -73,15 +73,15 @@ class MachinesActivity : AppCompatActivity() {
         scanQrCodeLauncher = registerForActivityResult(ScanCustomCode()) { result ->
             when (result) {
                 is QRSuccess -> {
-                    val machineId = result.content.rawValue.substringAfter("machineId=", "")
+                    result.content.rawValue.substringAfter("machineId=", "").takeIf { it.isNotEmpty() }?.let { machineId ->
+                        val isMachineAlreadyExist = localMachines.find { it.id == machineId } != null
 
-                    if (machineId.isNotEmpty()) {
-                        localMachines.find { it.id == machineId }?.let {
+                        if (isMachineAlreadyExist) {
                             Toast.makeText(applicationContext, "Vous avez déja importé cette machine !", Toast.LENGTH_SHORT).show()
-                        } ?: run {
+                        } else {
                             showAlertDialogAddMachine(machineId)
                         }
-                    } else {
+                    } ?: run {
                         Toast.makeText(applicationContext, "Une erreur est survenue", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -113,11 +113,8 @@ class MachinesActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
 
-        val deleteItem = menu.findItem(R.id.main_menu_delete)
-        deleteItem.isVisible = isSelectMode
-
-        val editItem = menu.findItem(R.id.main_menu_edit)
-        editItem.isVisible = isSelectMode && machinesAdapter.selectedMachines.size == 1
+        menu.findItem(R.id.main_menu_delete).isVisible = isSelectMode
+        menu.findItem(R.id.main_menu_edit).isVisible = isSelectMode && machinesAdapter.selectedMachines.size == 1
 
         return true
     }
@@ -141,8 +138,8 @@ class MachinesActivity : AppCompatActivity() {
     }
 
     private fun showAlertDialogEditMachine(machine: LocalMachine) {
-        val view = layoutInflater.inflate(R.layout.dialog_add_machine, null)
-        val editText: EditText = view.findViewById(R.id.dialog_add_machine_editText)
+        val view = layoutInflater.inflate(R.layout.dialog_simple_edittext, null)
+        val editText: EditText = view.findViewById(R.id.dialog_simple_edittext)
         editText.setText(machine.name)
 
         AlertDialog.Builder(this)
@@ -161,8 +158,8 @@ class MachinesActivity : AppCompatActivity() {
     }
 
     private fun showAlertDialogAddMachine(machineId: String) {
-        val view = layoutInflater.inflate(R.layout.dialog_add_machine, null)
-        val editText: EditText = view.findViewById(R.id.dialog_add_machine_editText)
+        val view = layoutInflater.inflate(R.layout.dialog_simple_edittext, null)
+        val editText: EditText = view.findViewById(R.id.dialog_simple_edittext)
 
         AlertDialog.Builder(this)
             .setCancelable(false)

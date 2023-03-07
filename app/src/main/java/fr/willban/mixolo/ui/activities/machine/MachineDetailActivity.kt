@@ -1,4 +1,4 @@
-package fr.willban.mixolo.ui.activities.detail
+package fr.willban.mixolo.ui.activities.machine
 
 import android.os.Bundle
 import android.view.MenuItem

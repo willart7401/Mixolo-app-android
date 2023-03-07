@@ -1,13 +1,13 @@
-package fr.willban.mixolo.ui.activities.machine
+package fr.willban.mixolo.ui.activities.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fr.willban.mixolo.data.model.LocalMachine
-import fr.willban.mixolo.data.usecase.AddMachine
-import fr.willban.mixolo.data.usecase.DeleteMachines
-import fr.willban.mixolo.data.usecase.EditMachine
-import fr.willban.mixolo.data.usecase.GetMachines
+import fr.willban.mixolo.data.usecase.machine.AddMachine
+import fr.willban.mixolo.data.usecase.machine.DeleteMachines
+import fr.willban.mixolo.data.usecase.machine.EditMachine
+import fr.willban.mixolo.data.usecase.machine.GetMachines
 import kotlinx.coroutines.launch
 
 class MachinesViewModel : ViewModel() {

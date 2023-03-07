@@ -1,4 +1,4 @@
-package fr.willban.mixolo.data.usecase
+package fr.willban.mixolo.data.usecase.machine
 
 import fr.willban.mixolo.data.model.LocalMachine
 import fr.willban.mixolo.data.repository.MachinesRepository

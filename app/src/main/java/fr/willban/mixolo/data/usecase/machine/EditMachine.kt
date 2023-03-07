@@ -1,13 +1,13 @@
-package fr.willban.mixolo.data.usecase
+package fr.willban.mixolo.data.usecase.machine
 
 import fr.willban.mixolo.data.model.LocalMachine
 import fr.willban.mixolo.data.repository.MachinesRepository
 
-class DeleteMachines {
+class EditMachine {
 
     private val machinesRepository = MachinesRepository
 
-    suspend fun invoke(machines: List<LocalMachine>) {
-        return machinesRepository.delete(machines)
+    suspend fun invoke(machine: LocalMachine) {
+        return machinesRepository.edit(machine)
     }
 }

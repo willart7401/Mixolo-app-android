@@ -1,4 +1,4 @@
-package fr.willban.mixolo.ui.activities.machine
+package fr.willban.mixolo.ui.activities.home
 
 import android.view.LayoutInflater
 import android.view.View

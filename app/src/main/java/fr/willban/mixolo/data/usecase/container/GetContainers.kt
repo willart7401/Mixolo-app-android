@@ -1,4 +1,4 @@
-package fr.willban.mixolo.data.usecase
+package fr.willban.mixolo.data.usecase.container
 
 import fr.willban.mixolo.data.model.Container
 import fr.willban.mixolo.data.repository.ContainersRepository

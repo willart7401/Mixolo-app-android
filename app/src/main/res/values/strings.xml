@@ -16,4 +16,8 @@
     <string name="edit">Modifier</string>
     <string name="edit_machine_name">Modifier le nom de la machine</string>
     <string name="start">Démarrer</string>
+    <string name="add_cocktail">Ajouter un cocktail</string>
+    <string name="cl">cl</string>
+    <string name="default_amount">5</string>
+    <string name="add">Ajouter</string>
 </resources>

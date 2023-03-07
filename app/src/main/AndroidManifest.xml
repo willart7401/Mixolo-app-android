@@ -21,11 +21,11 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.activities.detail.MachineDetailActivity"
+            android:name=".ui.activities.machine.MachineDetailActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.activities.machine.MachinesActivity"
+            android:name=".ui.activities.home.MachinesActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
