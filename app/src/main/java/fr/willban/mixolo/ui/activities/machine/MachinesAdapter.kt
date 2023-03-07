@@ -9,16 +9,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import fr.willban.mixolo.R
-import fr.willban.mixolo.data.model.Machine
+import fr.willban.mixolo.data.model.LocalMachine
 
 class MachinesAdapter(
-    private val onClickListener: (Machine) -> Unit,
-    private val onDeleteModeChanged: (Boolean) -> Unit
+    private val onClickListener: (LocalMachine) -> Unit,
+    private val onSelectModeChanged: (Boolean) -> Unit
 ) : RecyclerView.Adapter<MachinesAdapter.ViewHolder>() {
 
-    private var isDeleteMode = false
-    val selectedMachines = mutableListOf<Machine>()
-    private var machines: List<Machine> = emptyList()
+    private var isSelectMode = false
+    val selectedMachines = mutableListOf<LocalMachine>()
+    private var machines: List<LocalMachine> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_machine, parent, false))
@@ -40,9 +40,9 @@ class MachinesAdapter(
         }
 
         holder.itemView.setOnLongClickListener {
-            if (!isDeleteMode) {
-                onDeleteModeChanged(true)
-                isDeleteMode = true
+            if (!isSelectMode) {
+                onSelectModeChanged(true)
+                isSelectMode = true
                 selectItem(holder, machine)
                 true
             } else {
@@ -51,7 +51,8 @@ class MachinesAdapter(
         }
 
         holder.itemView.setOnClickListener {
-            if (isDeleteMode) {
+            if (isSelectMode) {
+                onSelectModeChanged(true)
                 selectItem(holder, machine)
             } else {
                 onClickListener(machine)
@@ -59,7 +60,7 @@ class MachinesAdapter(
         }
     }
 
-    private fun selectItem(holder: ViewHolder, machine: Machine) {
+    private fun selectItem(holder: ViewHolder, machine: LocalMachine) {
         if (selectedMachines.contains(machine)) {
             selectedMachines.remove(machine)
             holder.iconSelected.visibility = GONE
@@ -71,14 +72,14 @@ class MachinesAdapter(
         }
     }
 
-    fun refreshMachines(machines: List<Machine>) {
+    fun refreshMachines(machines: List<LocalMachine>) {
         this.machines = machines
         notifyDataSetChanged()
     }
 
-    fun exitDeleteMode() {
-        onDeleteModeChanged(false)
-        isDeleteMode = false
+    fun exitSelectMode() {
+        onSelectModeChanged(false)
+        isSelectMode = false
         selectedMachines.clear()
         notifyDataSetChanged()
     }

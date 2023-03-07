@@ -10,23 +10,22 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import fr.willban.mixolo.R
-import fr.willban.mixolo.data.model.Machine
+import fr.willban.mixolo.data.model.LocalMachine
 import fr.willban.mixolo.ui.activities.detail.MachineDetailActivity
 import io.github.g00fy2.quickie.QRResult.*
 import io.github.g00fy2.quickie.ScanCustomCode
 import io.github.g00fy2.quickie.config.ScannerConfig
-import kotlinx.coroutines.launch
 
 class MachinesActivity : AppCompatActivity() {
 
-    private var isDeleteMode: Boolean = false
+    private var isSelectMode: Boolean = false
     private lateinit var recyclerview: RecyclerView
     private lateinit var viewModel: MachinesViewModel
+    private var localMachines = listOf<LocalMachine>()
     private lateinit var machinesAdapter: MachinesAdapter
     private lateinit var fabAddMachine: FloatingActionButton
     private lateinit var scanQrCodeLauncher: ActivityResultLauncher<ScannerConfig>
@@ -49,10 +48,9 @@ class MachinesActivity : AppCompatActivity() {
             )
         }
 
-        lifecycleScope.launch {
-            viewModel.getMachines().collect { machines ->
-                machinesAdapter.refreshMachines(machines)
-            }
+        viewModel.getMachines().observe(this) { machines ->
+            machinesAdapter.refreshMachines(machines)
+            localMachines = machines
         }
     }
 
@@ -66,7 +64,7 @@ class MachinesActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this)[MachinesViewModel::class.java]
 
-        machinesAdapter = MachinesAdapter(::onMachineClickListener, ::onDeleteModeChanged)
+        machinesAdapter = MachinesAdapter(::onMachineClickListener, ::onSelectModeChanged)
         recyclerview.layoutManager = LinearLayoutManager(this)
         recyclerview.adapter = machinesAdapter
     }
@@ -78,7 +76,11 @@ class MachinesActivity : AppCompatActivity() {
                     val machineId = result.content.rawValue.substringAfter("machineId=", "")
 
                     if (machineId.isNotEmpty()) {
-                        showAlertDialogAddMachine(machineId)
+                        localMachines.find { it.id == machineId }?.let {
+                            Toast.makeText(applicationContext, "Vous avez déja importé cette machine !", Toast.LENGTH_SHORT).show()
+                        } ?: run {
+                            showAlertDialogAddMachine(machineId)
+                        }
                     } else {
                         Toast.makeText(applicationContext, "Une erreur est survenue", Toast.LENGTH_SHORT).show()
                     }
@@ -95,14 +97,14 @@ class MachinesActivity : AppCompatActivity() {
         }
     }
 
-    private fun onMachineClickListener(machine: Machine) {
+    private fun onMachineClickListener(machine: LocalMachine) {
         val intent = Intent(applicationContext, MachineDetailActivity::class.java)
         intent.putExtra("machineId", machine.id)
         startActivity(intent)
     }
 
-    private fun onDeleteModeChanged(isDeleteMode: Boolean) {
-        this.isDeleteMode = isDeleteMode
+    private fun onSelectModeChanged(isDeleteMode: Boolean) {
+        this.isSelectMode = isDeleteMode
         supportActionBar?.setDisplayHomeAsUpEnabled(isDeleteMode)
         supportActionBar?.setHomeButtonEnabled(isDeleteMode)
         invalidateOptionsMenu()
@@ -112,7 +114,10 @@ class MachinesActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.main_menu, menu)
 
         val deleteItem = menu.findItem(R.id.main_menu_delete)
-        deleteItem.isVisible = isDeleteMode
+        deleteItem.isVisible = isSelectMode
+
+        val editItem = menu.findItem(R.id.main_menu_edit)
+        editItem.isVisible = isSelectMode && machinesAdapter.selectedMachines.size == 1
 
         return true
     }
@@ -123,12 +128,36 @@ class MachinesActivity : AppCompatActivity() {
                 showAlertDialogDeleteConfirmation()
                 true
             }
+            R.id.main_menu_edit -> {
+                machinesAdapter.selectedMachines.firstOrNull()?.let { showAlertDialogEditMachine(it) }
+                true
+            }
             android.R.id.home -> {
-                machinesAdapter.exitDeleteMode()
+                machinesAdapter.exitSelectMode()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun showAlertDialogEditMachine(machine: LocalMachine) {
+        val view = layoutInflater.inflate(R.layout.dialog_add_machine, null)
+        val editText: EditText = view.findViewById(R.id.dialog_add_machine_editText)
+        editText.setText(machine.name)
+
+        AlertDialog.Builder(this)
+            .setCancelable(false)
+            .setTitle(getString(R.string.edit_machine_name))
+            .setView(view)
+            .setPositiveButton(getString(R.string.save)) { _, _ ->
+                viewModel.editMachine(
+                    machine = LocalMachine(id = machine.id, name = editText.text.toString())
+                )
+                machinesAdapter.exitSelectMode()
+            }
+            .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
+            .create()
+            .show()
     }
 
     private fun showAlertDialogAddMachine(machineId: String) {
@@ -141,7 +170,7 @@ class MachinesActivity : AppCompatActivity() {
             .setView(view)
             .setPositiveButton(getString(R.string.save)) { _, _ ->
                 viewModel.addMachine(
-                    machine = Machine(id = machineId, name = editText.text.toString(), admins = emptyList())
+                    machine = LocalMachine(id = machineId, name = editText.text.toString())
                 )
             }
             .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
@@ -155,8 +184,8 @@ class MachinesActivity : AppCompatActivity() {
             .setTitle(getString(R.string.delete_confirmation))
             .setMessage(getString(R.string.delete_confirmation_machines, machinesAdapter.selectedMachines.size))
             .setPositiveButton(getString(R.string.delete)) { _, _ ->
-                viewModel.delete(machinesAdapter.selectedMachines)
-                machinesAdapter.exitDeleteMode()
+                viewModel.delete(machinesAdapter.selectedMachines.toList())
+                machinesAdapter.exitSelectMode()
             }
             .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
             .create()

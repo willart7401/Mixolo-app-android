@@ -13,4 +13,7 @@
     <string name="capacities">Capacités</string>
     <string name="status">Statut</string>
     <string name="container_name">Nom de la boisson</string>
+    <string name="edit">Modifier</string>
+    <string name="edit_machine_name">Modifier le nom de la machine</string>
+    <string name="start">Démarrer</string>
 </resources>

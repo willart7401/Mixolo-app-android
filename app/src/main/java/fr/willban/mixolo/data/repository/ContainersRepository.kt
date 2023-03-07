@@ -9,7 +9,7 @@ object ContainersRepository {
 
     //TODO remove temp mock
     private var containers = MutableStateFlow(
-        listOf(
+        mutableListOf(
             Container(1, "Vodka", 75, 65),
             Container(2, "Jus d'orange", 75, 31),
             Container(3, "Jus d'ananas", 75, 3)
@@ -30,9 +30,10 @@ object ContainersRepository {
 
     fun edit(container: Container) {
         val list = this.containers.value.toMutableList()
+        this.containers.value.clear()
         list.indexOfFirst { it.id == container.id }.takeIf { it != -1 }?.let { index ->
             list[index] = list[index].copy(name = container.name)
         }
-        this.containers.update { list }
+        this.containers.value = list.toMutableList()
     }
 }

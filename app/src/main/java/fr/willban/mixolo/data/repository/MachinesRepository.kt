@@ -1,29 +1,26 @@
 package fr.willban.mixolo.data.repository
 
-import fr.willban.mixolo.data.model.Machine
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import androidx.lifecycle.LiveData
+import fr.willban.mixolo.data.database.MixoloDatabase
+import fr.willban.mixolo.data.model.LocalMachine
 
 object MachinesRepository {
 
-    //TODO remove temp mock
-    private var machines = MutableStateFlow(
-        listOf(
-            Machine("1", "Machine 1", emptyList()),
-            Machine("2", "Machine 2", emptyList()),
-            Machine("3", "Machine 3", emptyList())
-        )
-    )
+    private val machineDao = MixoloDatabase.getDatabase().machineDao()
 
-    fun get(): StateFlow<List<Machine>> {
-        return machines
+    fun get(): LiveData<List<LocalMachine>> {
+        return machineDao.getAllMachines()
     }
 
-    fun add(machine: Machine) {
-        machines.value += machine
+    suspend fun add(machine: LocalMachine) {
+        machineDao.addMachine(machine)
     }
 
-    fun delete(machines: List<Machine>) {
-        this.machines.value -= machines
+    suspend fun delete(machines: List<LocalMachine>) {
+        machineDao.deleteMachines(machines)
+    }
+
+    suspend fun edit(machine: LocalMachine) {
+        machineDao.updateMachines(machine)
     }
 }
