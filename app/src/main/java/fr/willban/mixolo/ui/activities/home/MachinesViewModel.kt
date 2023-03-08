@@ -6,9 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import fr.willban.mixolo.FIREBASE_URL
-import fr.willban.mixolo.data.model.Container
 import fr.willban.mixolo.data.model.LocalMachine
-import fr.willban.mixolo.data.model.RemoteMachine
 import fr.willban.mixolo.data.usecase.machine.*
 import fr.willban.mixolo.data.usecase.user.GetUserConnected
 import kotlinx.coroutines.launch
@@ -27,25 +25,10 @@ class MachinesViewModel : ViewModel() {
     fun addMachine(localMachine: LocalMachine, containerNb: Int, containerCapacity: Int) {
         val adminEmail = getUserConnectedUseCase.invoke()?.email
 
-        database.child("machines").child(localMachine.id).get().addOnSuccessListener {
-            if (it.value == null) {
-                val remoteMachine = RemoteMachine(
-                    id = localMachine.id,
-                    admins = if (adminEmail != null) listOf(adminEmail) else emptyList(),
-                    containers = createContainers(containerNb, containerCapacity),
-                    suggestions = emptyList(),
-                    historic = emptyList(),
-                    cocktail = null,
-                    isRunning = false,
-                    isPurging = false
-                )
-
-                database.child("machines").child(localMachine.id).setValue(remoteMachine)
-            }
-        }
+        addMachineUseCase.invokeRemotely(localMachine, containerNb, containerCapacity, adminEmail)
 
         viewModelScope.launch {
-            addMachineUseCase.invoke(localMachine)
+            addMachineUseCase.invokeLocally(localMachine)
         }
     }
 
@@ -65,17 +48,11 @@ class MachinesViewModel : ViewModel() {
         }
     }
 
-    private fun createContainers(containerNb: Int, containerCapacity: Int): List<Container> {
-        val list = mutableListOf<Container>()
-
-        for (id in 0 until containerNb) {
-            list.add(Container(id, "", containerCapacity, 0))
-        }
-
-        return list
-    }
-
     fun saveSelectedMachine(id: String) {
         saveCurrentMachineUseCase.invoke(id)
+    }
+
+    fun isUserConnectedIsAdmin(): Boolean {
+        return getUserConnectedUseCase.invoke()?.email == "william.germain74@gmail.com"
     }
 }

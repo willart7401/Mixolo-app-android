@@ -20,4 +20,7 @@
     <string name="cl">cl</string>
     <string name="default_amount">5</string>
     <string name="add">Ajouter</string>
+    <string name="manage_qrcode">Manage QR Code</string>
+    <string name="containers_number">Nombre de réservoirs</string>
+    <string name="default_container_capacity">Capacité par défaut des réservoirs</string>
 </resources>

@@ -16,4 +16,11 @@
         android:title="@string/delete">
     </item>
 
+    <item
+        android:id="@+id/main_menu_admin"
+        android:icon="@drawable/ic_qrcode_manager"
+        app:showAsAction="ifRoom"
+        android:title="@string/manage_qrcode">
+    </item>
+
 </menu>

@@ -19,6 +19,7 @@ import fr.willban.mixolo.R
 import fr.willban.mixolo.data.model.LocalMachine
 import fr.willban.mixolo.data.model.RemoteMachine
 import fr.willban.mixolo.ui.activities.machine.MachineDetailActivity
+import fr.willban.mixolo.ui.activities.qrcodes.QrCodesManagerActivity
 import fr.willban.mixolo.util.findParameterValue
 import fr.willban.mixolo.util.showShortToast
 import fr.willban.mixolo.util.toInt
@@ -130,6 +131,7 @@ class MachinesActivity : AppCompatActivity() {
 
         menu.findItem(R.id.main_menu_delete).isVisible = isSelectMode
         menu.findItem(R.id.main_menu_edit).isVisible = isSelectMode && machinesAdapter.selectedMachines.size == 1
+        menu.findItem(R.id.main_menu_admin).isVisible = viewModel.isUserConnectedIsAdmin()
 
         return true
     }
@@ -142,6 +144,10 @@ class MachinesActivity : AppCompatActivity() {
             }
             R.id.main_menu_edit -> {
                 machinesAdapter.selectedMachines.firstOrNull()?.let { showAlertDialogEditMachine(it) }
+                true
+            }
+            R.id.main_menu_admin -> {
+                startActivity(Intent(applicationContext, QrCodesManagerActivity::class.java))
                 true
             }
             android.R.id.home -> {

@@ -67,4 +67,7 @@ dependencies {
     implementation "androidx.room:room-runtime:2.5.0"
     kapt "androidx.room:room-compiler:2.5.0"
     implementation "androidx.room:room-ktx:2.5.0"
+
+    //QR Code encoder
+    implementation("io.github.g0dkar:qrcode-kotlin-android:3.3.0")
 }

@@ -69,11 +69,40 @@ object MachineRepository {
         machineDao.addMachine(machine)
     }
 
+    fun addRemotely(localMachine: LocalMachine, containerNb: Int, containerCapacity: Int, adminEmail: String?) {
+        database.child("machines").child(localMachine.id).get().addOnSuccessListener {
+            if (it.value == null) {
+                val remoteMachine = RemoteMachine(
+                    id = localMachine.id,
+                    admins = if (adminEmail != null) listOf(adminEmail) else emptyList(),
+                    containers = createContainers(containerNb, containerCapacity),
+                    suggestions = emptyList(),
+                    historic = emptyList(),
+                    cocktail = null,
+                    isRunning = false,
+                    isPurging = false
+                )
+
+                database.child("machines").child(localMachine.id).setValue(remoteMachine)
+            }
+        }
+    }
+
     suspend fun deleteLocally(machines: List<LocalMachine>) {
         machineDao.deleteMachines(machines)
     }
 
     suspend fun editLocally(machine: LocalMachine) {
         machineDao.updateMachines(machine)
+    }
+
+    private fun createContainers(containerNb: Int, containerCapacity: Int): List<Container> {
+        val list = mutableListOf<Container>()
+
+        for (id in 0 until containerNb) {
+            list.add(Container(id, "", containerCapacity, 0))
+        }
+
+        return list
     }
 }
