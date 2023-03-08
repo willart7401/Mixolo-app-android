@@ -1,16 +1,16 @@
 package fr.willban.mixolo.ui.activities.signin
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import fr.willban.mixolo.R
-import fr.willban.mixolo.TAG
+import fr.willban.mixolo.data.model.User
+import fr.willban.mixolo.data.usecase.user.SaveUser
 import fr.willban.mixolo.ui.activities.home.MachinesActivity
 
 class SignInActivity : AppCompatActivity() {
@@ -37,18 +37,20 @@ class SignInActivity : AppCompatActivity() {
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
         when (result.resultCode) {
             RESULT_OK -> {
-                val currentUser = FirebaseAuth.getInstance().currentUser
+                FirebaseAuth.getInstance().currentUser?.let { firebaseUser ->
+                    val user = User(
+                        id = firebaseUser.uid,
+                        email = firebaseUser.email
+                    )
 
-                if (currentUser != null) {
-                    //val user = User(currentUser.displayName, currentUser.email, currentUser.phoneNumber, currentUser.photoUrl.toString())
-                } else {
-                    Log.e("FirebaseUser", "FirebaseUser is null")
+                    SaveUser().invoke(user)
+                    startActivity(Intent(this, MachinesActivity::class.java))
+                    finish()
+                } ?: run {
+                    Toast.makeText(applicationContext, "Échec de connexion !", Toast.LENGTH_SHORT).show()
                 }
-
-                startActivity(Intent(this, MachinesActivity::class.java))
-                finish()
             }
-            else -> Log.e(TAG, "FAILED CONNECT FIREBASE : ${result.resultCode}")
+            else -> Toast.makeText(applicationContext, "Échec de connexion !", Toast.LENGTH_SHORT).show()
         }
     }
 

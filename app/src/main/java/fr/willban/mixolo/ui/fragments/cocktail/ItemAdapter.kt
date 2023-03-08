@@ -12,6 +12,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import fr.willban.mixolo.R
 import fr.willban.mixolo.data.model.Container
+import fr.willban.mixolo.util.toInt
 
 data class TmpIngredient(
     var name: String,
@@ -34,29 +35,14 @@ class ItemAdapter(private val context: Context, private val onFormChanged: (Bool
         holder.ingredientName.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, ingredients)
 
         holder.ingredientAmount.doOnTextChanged { text, _, _, _ ->
-            text.toString().takeIf { it.isNotEmpty() }?.let {
-                try {
-                    val amount = Integer.parseInt(text.toString())
-                    if (tmpIngredients[holder.adapterPosition] != null) {
-                        tmpIngredients[holder.adapterPosition]!!.amount = amount
-                    } else {
-                        tmpIngredients[holder.adapterPosition] = TmpIngredient("", amount)
-                    }
-                } catch (e: java.lang.Exception) {
-                    e.printStackTrace()
-                }
-                onFormChanged(verifyFormIsComplete())
+            text.toString().toInt().also { amount ->
+                saveTmpIngredient(position = position, amount = amount)
             }
         }
 
         holder.ingredientName.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
-                if (tmpIngredients[holder.adapterPosition] != null) {
-                    tmpIngredients[holder.adapterPosition]!!.name = ingredients[pos]
-                } else {
-                    tmpIngredients[holder.adapterPosition] = TmpIngredient(ingredients[pos], 0)
-                }
-                onFormChanged(verifyFormIsComplete())
+                saveTmpIngredient(position = holder.adapterPosition, name = ingredients[pos])
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
@@ -69,7 +55,7 @@ class ItemAdapter(private val context: Context, private val onFormChanged: (Bool
         notifyDataSetChanged()
     }
 
-    fun verifyFormIsComplete(): Boolean {
+    private fun verifyFormIsComplete(): Boolean {
         var isFormComplete = true
 
         for (ingredient in tmpIngredients.values) {
@@ -79,6 +65,19 @@ class ItemAdapter(private val context: Context, private val onFormChanged: (Bool
         }
 
         return isFormComplete && tmpIngredients.size == containers.size
+    }
+
+    private fun saveTmpIngredient(position: Int, name: String = "", amount: Int = 0) {
+        when {
+            tmpIngredients[position] != null && name.isEmpty() -> {
+                tmpIngredients[position]!!.amount = amount
+            }
+            tmpIngredients[position] != null && amount == 0 -> {
+                tmpIngredients[position]!!.name = name
+            }
+            else -> tmpIngredients[position] = TmpIngredient(name, amount)
+        }
+        onFormChanged(verifyFormIsComplete())
     }
 
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {

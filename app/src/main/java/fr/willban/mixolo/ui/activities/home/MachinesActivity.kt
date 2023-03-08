@@ -15,7 +15,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import fr.willban.mixolo.R
 import fr.willban.mixolo.data.model.LocalMachine
+import fr.willban.mixolo.data.model.RemoteMachine
 import fr.willban.mixolo.ui.activities.machine.MachineDetailActivity
+import fr.willban.mixolo.util.findParameterValue
+import fr.willban.mixolo.util.showShortToast
+import fr.willban.mixolo.util.toInt
+import fr.willban.mixolo.util.tryToInt
 import io.github.g00fy2.quickie.QRResult.*
 import io.github.g00fy2.quickie.ScanCustomCode
 import io.github.g00fy2.quickie.config.ScannerConfig
@@ -73,23 +78,32 @@ class MachinesActivity : AppCompatActivity() {
         scanQrCodeLauncher = registerForActivityResult(ScanCustomCode()) { result ->
             when (result) {
                 is QRSuccess -> {
-                    result.content.rawValue.substringAfter("machineId=", "").takeIf { it.isNotEmpty() }?.let { machineId ->
-                        val isMachineAlreadyExist = localMachines.find { it.id == machineId } != null
+                    val url = result.content.rawValue
+                    val machineId = url.findParameterValue("machineId")
+                    val containerNbString = url.findParameterValue("containers")
+                    val containerCapacityString = url.findParameterValue("capacity")
 
-                        if (isMachineAlreadyExist) {
-                            Toast.makeText(applicationContext, "Vous avez déja importé cette machine !", Toast.LENGTH_SHORT).show()
-                        } else {
-                            showAlertDialogAddMachine(machineId)
+                    when {
+                        machineId.isNullOrEmpty() || containerNbString.isNullOrEmpty() || containerCapacityString.isNullOrEmpty() -> {
+                            applicationContext.showShortToast("Machine inconnue")
                         }
-                    } ?: run {
-                        Toast.makeText(applicationContext, "Une erreur est survenue", Toast.LENGTH_SHORT).show()
+                        localMachines.find { it.id == machineId } != null -> {
+                            applicationContext.showShortToast("Vous avez déja importé cette machine")
+                        }
+                        else -> {
+                            containerNbString.tryToInt { containerNb ->
+                                containerCapacityString.tryToInt { containerCapacity ->
+                                    showAlertDialogAddMachine(machineId, containerNb, containerCapacity)
+                                }
+                            }
+                        }
                     }
                 }
                 is QRMissingPermission -> {
-                    Toast.makeText(applicationContext, "Autorisation caméra manquante", Toast.LENGTH_SHORT).show()
+                    applicationContext.showShortToast("Autorisation caméra manquante")
                 }
                 is QRError -> {
-                    Toast.makeText(applicationContext, "Une erreur est survenue", Toast.LENGTH_SHORT).show()
+                    applicationContext.showShortToast("AUne erreur est survenue")
                     result.exception.printStackTrace()
                 }
                 else -> {}
@@ -157,7 +171,7 @@ class MachinesActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun showAlertDialogAddMachine(machineId: String) {
+    private fun showAlertDialogAddMachine(machineId: String, containerNb: Int, containerCapacity: Int) {
         val view = layoutInflater.inflate(R.layout.dialog_simple_edittext, null)
         val editText: EditText = view.findViewById(R.id.dialog_simple_edittext)
 
@@ -166,9 +180,7 @@ class MachinesActivity : AppCompatActivity() {
             .setTitle(getString(R.string.machine_name))
             .setView(view)
             .setPositiveButton(getString(R.string.save)) { _, _ ->
-                viewModel.addMachine(
-                    machine = LocalMachine(id = machineId, name = editText.text.toString())
-                )
+                viewModel.addMachine(LocalMachine(id = machineId, name = editText.text.toString()), containerNb, containerCapacity)
             }
             .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
             .create()

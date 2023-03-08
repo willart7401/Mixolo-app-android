@@ -5,11 +5,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.EditText
-import android.widget.Spinner
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -19,7 +18,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import fr.willban.mixolo.R
 import fr.willban.mixolo.data.model.Cocktail
 import fr.willban.mixolo.data.model.Container
-import fr.willban.mixolo.data.model.Ingredient
 import fr.willban.mixolo.util.DividerItemDecorator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -77,14 +75,23 @@ class CocktailFragment : Fragment() {
     }
 
     private fun showAddCocktailPopUp() {
+        var isRecyclerViewCompleted = false
+        var isEditTextNameCompleted = false
+        var alertDialog: AlertDialog? = null
         val view = layoutInflater.inflate(R.layout.dialog_edit_cocktail, null)
         val cocktailName: EditText = view.findViewById(R.id.dec_cocktail_name)
         val recyclerView: RecyclerView = view.findViewById(R.id.dec_recyclerview)
 
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        val adapter = ItemAdapter(requireContext()) {
-
+        cocktailName.doOnTextChanged { text, _, _, _ ->
+            isEditTextNameCompleted = text.toString().isNotEmpty()
+            togglePositiveButton(alertDialog, isEditTextNameCompleted && isRecyclerViewCompleted)
         }
+
+        val adapter = ItemAdapter(requireContext()) { isComplete ->
+            isRecyclerViewCompleted = isComplete
+            togglePositiveButton(alertDialog, isEditTextNameCompleted && isRecyclerViewCompleted)
+        }
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
         //TODO remove temp mock
@@ -97,7 +104,7 @@ class CocktailFragment : Fragment() {
             listOf("Ingredient", "Vodka", "Tequila", "Jus d'orange", "Jus pomme")
         )
 
-        val dialog = AlertDialog.Builder(requireContext())
+        alertDialog = AlertDialog.Builder(requireContext())
             .setCancelable(false)
             .setTitle(getString(R.string.container_name))
             .setView(view)
@@ -107,13 +114,17 @@ class CocktailFragment : Fragment() {
             .setNegativeButton(getString(R.string.cancel), null)
             .create()
 
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
-        dialog.setOnShowListener {
-            
+        alertDialog.apply {
+            getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = false
+            show()
         }
-        dialog.show()
     }
 
+    private fun togglePositiveButton(alertDialog: AlertDialog?, isCompleted: Boolean) {
+        alertDialog?.getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = isCompleted
+    }
+
+    //TODO create cocktail
     private fun createCocktail(tmpIngredients: HashMap<Int, TmpIngredient>) {
         for (ingredient in tmpIngredients) {
             Log.e("WIWI", "Ingrédient ${ingredient.key} : ${ingredient.value.name} ${ingredient.value.amount} cl")

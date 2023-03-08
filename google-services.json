@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "266175036678",
+    "firebase_url": "https://mixolo-95131-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "mixolo-95131",
     "storage_bucket": "mixolo-95131.appspot.com"
   },
@@ -22,7 +23,7 @@
           }
         },
         {
-          "client_id": "266175036678-fauna48b8jt4l3m04vjn49s4uc08dcj6.apps.googleusercontent.com",
+          "client_id": "266175036678-6rg119v2itfmdrvcdju53ncrh4bvals2.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -35,7 +36,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "266175036678-fauna48b8jt4l3m04vjn49s4uc08dcj6.apps.googleusercontent.com",
+              "client_id": "266175036678-6rg119v2itfmdrvcdju53ncrh4bvals2.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
