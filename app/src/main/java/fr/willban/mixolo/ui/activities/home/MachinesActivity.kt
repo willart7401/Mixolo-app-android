@@ -2,6 +2,7 @@ package fr.willban.mixolo.ui.activities.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
@@ -9,6 +10,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -112,9 +114,8 @@ class MachinesActivity : AppCompatActivity() {
     }
 
     private fun onMachineClickListener(machine: LocalMachine) {
-        val intent = Intent(applicationContext, MachineDetailActivity::class.java)
-        intent.putExtra("machineId", machine.id)
-        startActivity(intent)
+        viewModel.saveSelectedMachine(machine.id)
+        startActivity(Intent(applicationContext, MachineDetailActivity::class.java))
     }
 
     private fun onSelectModeChanged(isDeleteMode: Boolean) {
@@ -156,7 +157,7 @@ class MachinesActivity : AppCompatActivity() {
         val editText: EditText = view.findViewById(R.id.dialog_simple_edittext)
         editText.setText(machine.name)
 
-        AlertDialog.Builder(this)
+        val alertDialog = AlertDialog.Builder(this)
             .setCancelable(false)
             .setTitle(getString(R.string.edit_machine_name))
             .setView(view)
@@ -168,14 +169,23 @@ class MachinesActivity : AppCompatActivity() {
             }
             .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
             .create()
-            .show()
+
+        editText.doOnTextChanged { text, _, _, _ ->
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = text.toString().isNotEmpty()
+        }
+
+        alertDialog.apply {
+            show()
+            getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = false
+        }
     }
 
     private fun showAlertDialogAddMachine(machineId: String, containerNb: Int, containerCapacity: Int) {
         val view = layoutInflater.inflate(R.layout.dialog_simple_edittext, null)
         val editText: EditText = view.findViewById(R.id.dialog_simple_edittext)
+        editText.setText("")
 
-        AlertDialog.Builder(this)
+        val alertDialog = AlertDialog.Builder(this)
             .setCancelable(false)
             .setTitle(getString(R.string.machine_name))
             .setView(view)
@@ -184,7 +194,15 @@ class MachinesActivity : AppCompatActivity() {
             }
             .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
             .create()
-            .show()
+
+        editText.doOnTextChanged { text, _, _, _ ->
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = text.toString().isNotEmpty()
+        }
+
+        alertDialog.apply {
+            show()
+            getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = false
+        }
     }
 
     private fun showAlertDialogDeleteConfirmation() {

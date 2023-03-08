@@ -1,6 +1,7 @@
 package fr.willban.mixolo.ui.fragments.cocktail
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,15 +57,16 @@ class ItemAdapter(private val context: Context, private val onFormChanged: (Bool
     }
 
     private fun verifyFormIsComplete(): Boolean {
-        var isFormComplete = true
+        val firstElement = tmpIngredients.entries.firstOrNull()?.value
+
+        if (firstElement?.name == "Ingredient" && firstElement.amount == 0) return false
 
         for (ingredient in tmpIngredients.values) {
-            if (ingredient.name == "Ingredient" || ingredient.name.isEmpty() || ingredient.amount == 0) {
-                isFormComplete = false
+            if (ingredient.name == "Ingredient" && ingredient.amount != 0 || ingredient.name != "Ingredient" && ingredient.amount == 0) {
+                return false
             }
         }
-
-        return isFormComplete && tmpIngredients.size == containers.size
+        return true
     }
 
     private fun saveTmpIngredient(position: Int, name: String = "", amount: Int = 0) {

@@ -6,7 +6,7 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import fr.willban.mixolo.data.database.MixoloDatabase
 
-const val TAG = "DEBUG-Mixolo"
+const val FIREBASE_URL = "https://mixolo-95131-default-rtdb.europe-west1.firebasedatabase.app/"
 
 class App : Application() {
 

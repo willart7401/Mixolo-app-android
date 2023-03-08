@@ -10,6 +10,7 @@ import fr.willban.mixolo.R
 import fr.willban.mixolo.data.model.Container
 import fr.willban.mixolo.util.px
 import fr.willban.mixolo.util.wave.MultiWaveHeader
+import java.lang.Float.min
 
 class ContainerAdapter(private val onClickListener: (Container) -> Unit) : RecyclerView.Adapter<ContainerAdapter.ViewHolder>() {
 
@@ -31,8 +32,11 @@ class ContainerAdapter(private val onClickListener: (Container) -> Unit) : Recyc
 
         holder.waterWaveView.setWaves("0,0,1,1,-26")
         holder.waterWaveView.scaleY = -1f
-        holder.waterWaveView.progress = container.remainingAmount / container.totalAmount.toFloat()
         holder.waterWaveView.velocity *= if (containers.size > 3) 0.5f else 1f
+
+        if (container.totalAmount != null && container.remainingAmount != null) {
+            holder.waterWaveView.progress = min(container.remainingAmount / container.totalAmount.toFloat(), 1f)
+        }
 
         holder.itemView.setOnClickListener {
             onClickListener(container)

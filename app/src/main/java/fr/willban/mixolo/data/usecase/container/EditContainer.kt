@@ -1,13 +1,13 @@
 package fr.willban.mixolo.data.usecase.container
 
 import fr.willban.mixolo.data.model.Container
-import fr.willban.mixolo.data.repository.ContainersRepository
+import fr.willban.mixolo.data.repository.ContainerRepository
 
 class EditContainer {
 
-    private val containersRepository = ContainersRepository
+    private val containerRepository = ContainerRepository
 
-    fun invoke(container: Container) {
-        return containersRepository.edit(container)
+    fun invoke(machineId: String, container: Container) {
+        containerRepository.editContainer(machineId, container)
     }
 }

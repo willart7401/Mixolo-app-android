@@ -2,20 +2,26 @@ package fr.willban.mixolo.ui.fragments.container
 
 import androidx.lifecycle.ViewModel
 import fr.willban.mixolo.data.model.Container
+import fr.willban.mixolo.data.model.RemoteMachine
 import fr.willban.mixolo.data.usecase.container.EditContainer
-import fr.willban.mixolo.data.usecase.container.GetContainers
-import kotlinx.coroutines.flow.StateFlow
+import fr.willban.mixolo.data.usecase.machine.GetCurrentMachine
+import fr.willban.mixolo.data.usecase.machine.GetMachine
+import kotlinx.coroutines.flow.Flow
 
 class ContainerViewModel : ViewModel() {
 
-    private val getContainersUseCase = GetContainers()
+    private val getMachineUseCase = GetMachine()
     private val editContainerUseCase = EditContainer()
+    private val getCurrentMachinesUseCase = GetCurrentMachine()
 
-    fun getContainers(): StateFlow<List<Container>> {
-        return getContainersUseCase.invoke()
+    fun getContainers(): Flow<RemoteMachine> {
+        val machineId = getCurrentMachinesUseCase.invoke()
+        return getMachineUseCase.invokeRemotely(machineId)
     }
 
     fun editContainer(container: Container) {
-        editContainerUseCase.invoke(container)
+        getCurrentMachinesUseCase.invoke()?.let { machineId ->
+            editContainerUseCase.invoke(machineId, container)
+        }
     }
 }

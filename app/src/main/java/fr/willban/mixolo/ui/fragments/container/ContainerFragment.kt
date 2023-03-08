@@ -37,9 +37,10 @@ class ContainerFragment : Fragment() {
         initRecyclerView(view)
 
         lifecycleScope.launch {
-            viewModel.getContainers().collect { containers ->
-                adapter.refreshMachines(containers)
-                recyclerView.layoutManager = if (containers.size > 3) GridLayoutManager(requireContext(), 2) else LinearLayoutManager(requireContext())
+            viewModel.getContainers().collect { machine ->
+                val containerSize = machine.containers?.size ?: 0
+                machine.containers?.let { adapter.refreshMachines(it) }
+                recyclerView.layoutManager = if (containerSize > 3) GridLayoutManager(requireContext(), 2) else LinearLayoutManager(requireContext())
             }
         }
     }
@@ -51,7 +52,7 @@ class ContainerFragment : Fragment() {
         recyclerView.adapter = adapter
     }
 
-    private fun onClickListener(container: Container){
+    private fun onClickListener(container: Container) {
         showAlertDialogEditContainer(container)
     }
 
