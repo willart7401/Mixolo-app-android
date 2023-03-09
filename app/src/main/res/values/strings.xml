@@ -28,4 +28,7 @@
     <string name="sign_default_text">Bienvenue dans l\'application de gestion d\'appareils Mixolo !\n\nVeuillez vous connecter pour continuer.</string>
     <string name="logout_confirmation">Confirmation de déconnexion</string>
     <string name="logout_confirmation_message">Êtes-vous sur de vouloir vous déconnecter ?</string>
+    <string name="cocktail_quantity">Quantité de cocktail</string>
+    <string name="enter_cocktail_quantity">Veuilez entrer la quantité de cocktail désiré (en cl)</string>
+    <string name="launch">Lancer</string>
 </resources>

@@ -49,36 +49,15 @@ object CocktailRepository {
             Cocktail(
                 1, "Sex on the beach", listOf(
                     Ingredient(1, "Voodka", 5),
-                    Ingredient(2, "Jus d'ananas", 25),
-                    Ingredient(3, "Jus de cramberry", 35)
+                    Ingredient(2, "Jus d'ananas", 5),
+                    Ingredient(3, "Jus de cramberry", 15)
                 )
             ),
             Cocktail(
-                2, "Sex on the beach", listOf(
+                2, "Punch", listOf(
                     Ingredient(1, "Voodka", 5),
-                    Ingredient(2, "Jus d'ananas", 25),
-                    Ingredient(3, "Jus de cramberry", 35)
-                )
-            ),
-            Cocktail(
-                3, "Sex on the beach", listOf(
-                    Ingredient(1, "Voodka", 5),
-                    Ingredient(2, "Jus d'ananas", 25),
-                    Ingredient(3, "Jus de cramberry", 35)
-                )
-            ),
-            Cocktail(
-                4, "Sex on the beach", listOf(
-                    Ingredient(1, "Voodka", 5),
-                    Ingredient(2, "Jus d'ananas", 25),
-                    Ingredient(3, "Jus de cramberry", 35)
-                )
-            ),
-            Cocktail(
-                5, "Sex on the beach", listOf(
-                    Ingredient(1, "Voodka", 5),
-                    Ingredient(2, "Jus d'ananas", 25),
-                    Ingredient(3, "Jus de cramberry", 35)
+                    Ingredient(2, "Jus d'ananas", 10),
+                    Ingredient(3, "Jus de cramberry", 10)
                 )
             )
         )

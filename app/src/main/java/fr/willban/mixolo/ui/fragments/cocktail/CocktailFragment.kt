@@ -1,6 +1,8 @@
 package fr.willban.mixolo.ui.fragments.cocktail
 
 import android.os.Bundle
+import android.text.InputFilter
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,8 +20,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import fr.willban.mixolo.R
 import fr.willban.mixolo.data.model.Cocktail
 import fr.willban.mixolo.data.model.Ingredient
+import fr.willban.mixolo.data.model.LocalMachine
 import fr.willban.mixolo.util.DividerItemDecorator
 import fr.willban.mixolo.util.showShortToast
+import fr.willban.mixolo.util.tryToInt
 import kotlinx.coroutines.launch
 
 class CocktailFragment : Fragment() {
@@ -71,8 +75,51 @@ class CocktailFragment : Fragment() {
     }
 
     private fun startCocktail(cocktail: Cocktail) {
-        viewModel.startCocktail(cocktail) { msg ->
-            requireContext().showShortToast(msg)
+        viewModel.getContainersAndIngredients { containers, _ ->
+            val view = layoutInflater.inflate(R.layout.dialog_simple_edittext, null)
+            val editText: EditText = view.findViewById(R.id.dialog_simple_edittext)
+            editText.hint = "Quantité en cl"
+            editText.inputType = InputType.TYPE_CLASS_NUMBER
+            editText.maxLines = 1
+            editText.filters += InputFilter.LengthFilter(3)
+
+            val alertDialog = AlertDialog.Builder(requireContext())
+                .setCancelable(false)
+                .setTitle(getString(R.string.cocktail_quantity))
+                .setMessage(getString(R.string.enter_cocktail_quantity))
+                .setView(view)
+                .setPositiveButton(getString(R.string.launch)) { _, _ ->
+                    editText.text.toString().tryToInt { quantity ->
+                        val cocktailToLaunch = cocktail.copy(ingredients = cocktail.ingredients?.map { ingredient ->
+                            ingredient.amount = (ingredient.amount ?: 0) * quantity / 100
+                            ingredient
+                        })
+                        viewModel.startCocktail(cocktailToLaunch) { msg ->
+                            requireContext().showShortToast(msg)
+                        }
+                    }
+                }
+                .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
+                .create()
+
+            editText.doOnTextChanged { text, _, _, _ ->
+                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = text.toString().isNotEmpty()
+                editText.text.toString().tryToInt { quantity ->
+                    for (ingredient in cocktail.ingredients ?: emptyList()) {
+                        val container = containers.find { it.name == ingredient.name }
+
+                        if (container == null || (container.remainingAmount ?: 0) < quantity * (ingredient.amount ?: 0)) {
+                            editText.error = "Pas assez de ${ingredient.name} pour cette quantité"
+                            break
+                        }
+                    }
+                }
+            }
+
+            alertDialog.apply {
+                show()
+                getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = false
+            }
         }
     }
 
@@ -121,11 +168,13 @@ class CocktailFragment : Fragment() {
     }
 
     private fun createCocktail(cocktailName: String, tmpIngredients: HashMap<Int, TmpIngredient>) {
+        val finalTmpIngredients = tmpIngredients.entries.filter { (_, value) -> value.amount != 0 || value.name != "Ingredient" }
+        val totalAmount = finalTmpIngredients.sumOf { it.value.amount }.toFloat() / 100
+
         val cocktail = Cocktail(
             id = cocktailList.size + 1,
             name = cocktailName,
-            ingredients = tmpIngredients.entries.filter { (_, value) -> value.amount != 0 || value.name != "Ingredient" }
-                .map { Ingredient(it.key, it.value.name, it.value.amount) }
+            ingredients = finalTmpIngredients.map { Ingredient(it.key, it.value.name, (it.value.amount / totalAmount).toInt()) }
         )
 
         viewModel.addCocktail(cocktail)
