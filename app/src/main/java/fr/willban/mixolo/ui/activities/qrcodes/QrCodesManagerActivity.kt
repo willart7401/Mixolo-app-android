@@ -22,6 +22,7 @@ const val BASE_URL = "https://play.google.com/store/apps/details?id=fr.willban.m
 class QrCodesManagerActivity : AppCompatActivity() {
 
     private lateinit var listView: ListView
+    private var qrcodes = emptyList<String>()
     private lateinit var addMachineButton: Button
     private lateinit var editTextContainer: EditText
     private lateinit var editTextCapacity: EditText
@@ -48,7 +49,7 @@ class QrCodesManagerActivity : AppCompatActivity() {
                             "${it.findParameterValue("containers")} x " +
                             "${it.findParameterValue("capacity")} cl"
                 }
-
+                qrcodes = list
                 adapter.clear()
                 adapter.addAll(beautifulList)
                 adapter.notifyDataSetChanged()
@@ -56,7 +57,15 @@ class QrCodesManagerActivity : AppCompatActivity() {
         }
 
         listView.setOnItemClickListener { _, _, position, _ ->
-            adapter.getItem(position)?.let { url ->
+            qrcodes.getOrNull(position)?.let { url ->
+                val cacheFiles = applicationContext.cacheDir.listFiles { file -> file.name.endsWith(".png") }
+
+                if (cacheFiles != null) {
+                    for (file in cacheFiles) {
+                        file.delete()
+                    }
+                }
+
                 val file = File(applicationContext.cacheDir, "${System.currentTimeMillis()}.png")
 
                 FileOutputStream(file).use {
@@ -65,12 +74,10 @@ class QrCodesManagerActivity : AppCompatActivity() {
 
                 val imageUri = FileProvider.getUriForFile(applicationContext, "${applicationContext.packageName}.fileprovider", file)
 
-                val intent = Intent(Intent.ACTION_VIEW).apply {
-                    setDataAndType(imageUri, "image/png")
-                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                }
-
-                startActivity(intent)
+                val shareIntent = Intent(Intent.ACTION_SEND)
+                shareIntent.type = "image/png"
+                shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri)
+                startActivity(Intent.createChooser(shareIntent, "Partager le QR Code"))
             }
         }
 

@@ -1,26 +1,24 @@
 package fr.willban.mixolo.ui.activities.home
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import fr.willban.mixolo.FIREBASE_URL
 import fr.willban.mixolo.data.model.LocalMachine
 import fr.willban.mixolo.data.usecase.machine.*
 import fr.willban.mixolo.data.usecase.user.GetUserConnected
+import fr.willban.mixolo.data.usecase.user.LogoutUser
 import kotlinx.coroutines.launch
 
 class MachinesViewModel : ViewModel() {
 
+    private val logoutUserUseCase = LogoutUser()
     private val addMachineUseCase = AddMachine()
     private val getMachineUseCase = GetMachine()
     private val editMachinesUseCaseLocally = EditMachine()
     private val deleteMachinesUseCase = DeleteMachines()
     private val getUserConnectedUseCase = GetUserConnected()
     private val saveCurrentMachineUseCase = SaveCurrentMachine()
-
-    private var database: DatabaseReference = FirebaseDatabase.getInstance(FIREBASE_URL).reference
 
     fun addMachine(localMachine: LocalMachine, containerNb: Int, containerCapacity: Int) {
         val adminEmail = getUserConnectedUseCase.invoke()?.email
@@ -54,5 +52,9 @@ class MachinesViewModel : ViewModel() {
 
     fun isUserConnectedIsAdmin(): Boolean {
         return getUserConnectedUseCase.invoke()?.email == "william.germain74@gmail.com"
+    }
+
+    fun logout(context: Context) {
+        logoutUserUseCase.invoke(context)
     }
 }

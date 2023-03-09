@@ -20,7 +20,12 @@
     <string name="cl">cl</string>
     <string name="default_amount">5</string>
     <string name="add">Ajouter</string>
-    <string name="manage_qrcode">Manage QR Code</string>
+    <string name="manage_qrcode">Géréer les QR Codes</string>
     <string name="containers_number">Nombre de réservoirs</string>
     <string name="default_container_capacity">Capacité par défaut des réservoirs</string>
+    <string name="login">Se connecter</string>
+    <string name="logout">Se déconnecter</string>
+    <string name="sign_default_text">Bienvenue dans l\'application de gestion d\'appareils Mixolo !\n\nVeuillez vous connecter pour continuer.</string>
+    <string name="logout_confirmation">Confirmation de déconnexion</string>
+    <string name="logout_confirmation_message">Êtes-vous sur de vouloir vous déconnecter ?</string>
 </resources>

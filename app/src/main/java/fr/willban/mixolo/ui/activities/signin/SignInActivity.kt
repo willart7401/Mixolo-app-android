@@ -1,7 +1,9 @@
 package fr.willban.mixolo.ui.activities.signin
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.auth.AuthUI
@@ -15,6 +17,7 @@ import fr.willban.mixolo.ui.activities.home.MachinesActivity
 
 class SignInActivity : AppCompatActivity() {
 
+    private lateinit var loginButton: Button
     private val providers = arrayListOf(AuthUI.IdpConfig.GoogleBuilder().build(), AuthUI.IdpConfig.EmailBuilder().build())
     private val signInLauncher = registerForActivityResult(FirebaseAuthUIActivityResultContract()) { this.onSignInResult(it) }
 
@@ -22,7 +25,15 @@ class SignInActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
 
-        startSignInLauncher()
+        if (!getSharedPreferences("MIXOLO", Context.MODE_PRIVATE).getBoolean("isFirstLogin", true)) {
+            startSignInLauncher()
+        }
+
+        loginButton = findViewById(R.id.login_button)
+
+        loginButton.setOnClickListener {
+            startSignInLauncher()
+        }
     }
 
     private fun startSignInLauncher() {
@@ -43,7 +54,7 @@ class SignInActivity : AppCompatActivity() {
                         email = firebaseUser.email
                     )
 
-                    SaveUser().invoke(user)
+                    SaveUser().invoke(applicationContext, user)
                     startActivity(Intent(this, MachinesActivity::class.java))
                     finish()
                 } ?: run {
@@ -51,13 +62,6 @@ class SignInActivity : AppCompatActivity() {
                 }
             }
             else -> Toast.makeText(applicationContext, "Échec de connexion !", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun logout() {
-        AuthUI.getInstance().signOut(this).addOnCompleteListener {
-            Toast.makeText(this, "Vous êtes déconnecté !", Toast.LENGTH_LONG).show()
-            startSignInLauncher()
         }
     }
 }

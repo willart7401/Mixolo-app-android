@@ -14,12 +14,14 @@ import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.firebase.ui.auth.AuthUI
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import fr.willban.mixolo.R
 import fr.willban.mixolo.data.model.LocalMachine
 import fr.willban.mixolo.data.model.RemoteMachine
 import fr.willban.mixolo.ui.activities.machine.MachineDetailActivity
 import fr.willban.mixolo.ui.activities.qrcodes.QrCodesManagerActivity
+import fr.willban.mixolo.ui.activities.signin.SignInActivity
 import fr.willban.mixolo.util.findParameterValue
 import fr.willban.mixolo.util.showShortToast
 import fr.willban.mixolo.util.toInt
@@ -147,7 +149,13 @@ class MachinesActivity : AppCompatActivity() {
                 true
             }
             R.id.main_menu_admin -> {
+                machinesAdapter.exitSelectMode()
                 startActivity(Intent(applicationContext, QrCodesManagerActivity::class.java))
+                true
+            }
+            R.id.main_menu_logout -> {
+                machinesAdapter.exitSelectMode()
+                showAlertDialogLogoutConfirmation()
                 true
             }
             android.R.id.home -> {
@@ -173,7 +181,9 @@ class MachinesActivity : AppCompatActivity() {
                 )
                 machinesAdapter.exitSelectMode()
             }
-            .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
+            .setNegativeButton(getString(R.string.cancel)) { _, _ ->
+                machinesAdapter.exitSelectMode()
+            }
             .create()
 
         editText.doOnTextChanged { text, _, _, _ ->
@@ -213,15 +223,39 @@ class MachinesActivity : AppCompatActivity() {
 
     private fun showAlertDialogDeleteConfirmation() {
         AlertDialog.Builder(this)
-            .setCancelable(false)
+            .setCancelable(true)
             .setTitle(getString(R.string.delete_confirmation))
             .setMessage(getString(R.string.delete_confirmation_machines, machinesAdapter.selectedMachines.size))
             .setPositiveButton(getString(R.string.delete)) { _, _ ->
                 viewModel.delete(machinesAdapter.selectedMachines.toList())
                 machinesAdapter.exitSelectMode()
             }
+            .setNegativeButton(getString(R.string.cancel)) { _, _ ->
+                machinesAdapter.exitSelectMode()
+            }
+            .create()
+            .show()
+    }
+
+    private fun showAlertDialogLogoutConfirmation() {
+        AlertDialog.Builder(this)
+            .setCancelable(true)
+            .setTitle(getString(R.string.logout_confirmation))
+            .setMessage(getString(R.string.logout_confirmation_message))
+            .setPositiveButton(getString(R.string.logout)) { _, _ ->
+                logout()
+            }
             .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
             .create()
             .show()
+    }
+
+    private fun logout() {
+        AuthUI.getInstance().signOut(this).addOnCompleteListener {
+            viewModel.logout(applicationContext)
+            Toast.makeText(this, "Vous êtes déconnecté !", Toast.LENGTH_LONG).show()
+            startActivity(Intent(this, SignInActivity::class.java))
+            finish()
+        }
     }
 }
