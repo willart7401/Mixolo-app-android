@@ -6,7 +6,7 @@ data class RemoteMachine(
     var containers: List<Container>? = null,
     val suggestions: List<Cocktail>? = null,
     val historic: List<Cocktail>? = null,
-    val cocktail: Cocktail? = null,
-    val isRunning: Boolean? = null,
-    val isPurging: Boolean? = null
+    var cocktail: Cocktail? = null,
+    val running: Boolean? = null,
+    val purging: Boolean? = null
 )

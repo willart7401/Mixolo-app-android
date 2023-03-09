@@ -17,18 +17,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import fr.willban.mixolo.R
 import fr.willban.mixolo.data.model.Cocktail
-import fr.willban.mixolo.data.model.Container
+import fr.willban.mixolo.data.model.Ingredient
 import fr.willban.mixolo.util.DividerItemDecorator
-import kotlinx.coroutines.Dispatchers
+import fr.willban.mixolo.util.showShortToast
 import kotlinx.coroutines.launch
 
 class CocktailFragment : Fragment() {
 
+    private var cocktailList = emptyList<Cocktail>()
     private lateinit var adapter: CocktailAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: CocktailViewModel
     private lateinit var fabCocktail: FloatingActionButton
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,10 +48,10 @@ class CocktailFragment : Fragment() {
             showAddCocktailPopUp()
         }
 
-        //TODO replace by API Cocktails
-        lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.getCocktails().also { cocktails ->
+        lifecycleScope.launch {
+            viewModel.getCocktails()?.collect { cocktails ->
                 adapter.refreshMachines(cocktails)
+                cocktailList = cocktails
             }
         }
     }
@@ -71,7 +71,9 @@ class CocktailFragment : Fragment() {
     }
 
     private fun startCocktail(cocktail: Cocktail) {
-        //TODO start cocktail
+        viewModel.startCocktail(cocktail) { msg ->
+            requireContext().showShortToast(msg)
+        }
     }
 
     private fun showAddCocktailPopUp() {
@@ -94,22 +96,16 @@ class CocktailFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
-        //TODO remove temp mock
-        adapter.refresh(
-            listOf(
-                Container(1, "", 0, 0),
-                Container(1, "", 0, 0),
-                Container(1, "", 0, 0)
-            ),
-            listOf("Ingredient", "Vodka", "Tequila", "Jus d'orange", "Jus pomme")
-        )
+        viewModel.getContainersAndIngredients { containers, ingredients ->
+            adapter.refresh(containers, ingredients)
+        }
 
         alertDialog = AlertDialog.Builder(requireContext())
             .setCancelable(false)
             .setTitle(getString(R.string.container_name))
             .setView(view)
             .setPositiveButton(getString(R.string.add)) { _, _ ->
-                createCocktail(adapter.tmpIngredients)
+                createCocktail(cocktailName.text.toString(), adapter.tmpIngredients)
             }
             .setNegativeButton(getString(R.string.cancel), null)
             .create()
@@ -124,10 +120,14 @@ class CocktailFragment : Fragment() {
         alertDialog?.getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = isCompleted
     }
 
-    //TODO create cocktail
-    private fun createCocktail(tmpIngredients: HashMap<Int, TmpIngredient>) {
-        for (ingredient in tmpIngredients) {
-            Log.e("WIWI", "Ingrédient ${ingredient.key} : ${ingredient.value.name} ${ingredient.value.amount} cl")
-        }
+    private fun createCocktail(cocktailName: String, tmpIngredients: HashMap<Int, TmpIngredient>) {
+        val cocktail = Cocktail(
+            id = cocktailList.size + 1,
+            name = cocktailName,
+            ingredients = tmpIngredients.entries.filter { (_, value) -> value.amount != 0 || value.name != "Ingredient" }
+                .map { Ingredient(it.key, it.value.name, it.value.amount) }
+        )
+
+        viewModel.addCocktail(cocktail)
     }
 }

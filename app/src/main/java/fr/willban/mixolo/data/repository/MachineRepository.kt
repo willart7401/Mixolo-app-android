@@ -4,9 +4,7 @@ import androidx.lifecycle.LiveData
 import com.google.firebase.database.*
 import fr.willban.mixolo.FIREBASE_URL
 import fr.willban.mixolo.data.database.MixoloDatabase
-import fr.willban.mixolo.data.model.Container
-import fr.willban.mixolo.data.model.LocalMachine
-import fr.willban.mixolo.data.model.RemoteMachine
+import fr.willban.mixolo.data.model.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
@@ -76,11 +74,11 @@ object MachineRepository {
                     id = localMachine.id,
                     admins = if (adminEmail != null) listOf(adminEmail) else emptyList(),
                     containers = createContainers(containerNb, containerCapacity),
-                    suggestions = emptyList(),
-                    historic = emptyList(),
+                    suggestions = listOf(),
+                    historic = listOf(),
                     cocktail = null,
-                    isRunning = false,
-                    isPurging = false
+                    running = false,
+                    purging = false
                 )
 
                 database.child("machines").child(localMachine.id).setValue(remoteMachine)

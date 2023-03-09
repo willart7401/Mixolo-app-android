@@ -253,7 +253,7 @@ class MachinesActivity : AppCompatActivity() {
     private fun logout() {
         AuthUI.getInstance().signOut(this).addOnCompleteListener {
             viewModel.logout(applicationContext)
-            Toast.makeText(this, "Vous êtes déconnecté !", Toast.LENGTH_LONG).show()
+            applicationContext.showShortToast("Vous êtes déconnecté !")
             startActivity(Intent(this, SignInActivity::class.java))
             finish()
         }

@@ -14,6 +14,7 @@ import fr.willban.mixolo.R
 import fr.willban.mixolo.data.model.User
 import fr.willban.mixolo.data.usecase.user.SaveUser
 import fr.willban.mixolo.ui.activities.home.MachinesActivity
+import fr.willban.mixolo.util.showShortToast
 
 class SignInActivity : AppCompatActivity() {
 
@@ -58,10 +59,10 @@ class SignInActivity : AppCompatActivity() {
                     startActivity(Intent(this, MachinesActivity::class.java))
                     finish()
                 } ?: run {
-                    Toast.makeText(applicationContext, "Échec de connexion !", Toast.LENGTH_SHORT).show()
+                    applicationContext.showShortToast("Échec de connexion !")
                 }
             }
-            else -> Toast.makeText(applicationContext, "Échec de connexion !", Toast.LENGTH_SHORT).show()
+            else -> applicationContext.showShortToast("Échec de connexion !")
         }
     }
 }

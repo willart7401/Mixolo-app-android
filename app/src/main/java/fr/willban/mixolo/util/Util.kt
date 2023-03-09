@@ -11,7 +11,7 @@ val Int.dp: Int get() = (this / Resources.getSystem().displayMetrics.density).to
 val Int.px: Int get() = (this * Resources.getSystem().displayMetrics.density).toInt()
 
 fun List<Ingredient>.prettyPrint(): String {
-    return this.joinToString(", ") { it.name.lowercase() }.replaceFirstChar(Char::titlecase)
+    return this.joinToString(", ") { it.name?.lowercase() ?: "" }.replaceFirstChar(Char::titlecase)
 }
 
 fun String.findParameterValue(parameterName: String): String? {

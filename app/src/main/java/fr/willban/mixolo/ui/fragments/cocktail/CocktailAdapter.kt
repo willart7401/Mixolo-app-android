@@ -24,7 +24,7 @@ class CocktailAdapter(private val onClickListener: (Cocktail) -> Unit) : Recycle
         val cocktail = cocktails[position]
 
         holder.name.text = cocktail.name
-        holder.ingredients.text = cocktail.ingredients.prettyPrint()
+        holder.ingredients.text = cocktail.ingredients?.prettyPrint()
 
         holder.playButton.setOnClickListener {
             onClickListener(cocktail)
