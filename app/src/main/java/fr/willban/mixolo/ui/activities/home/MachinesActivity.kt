@@ -2,11 +2,9 @@ package fr.willban.mixolo.ui.activities.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -18,13 +16,11 @@ import com.firebase.ui.auth.AuthUI
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import fr.willban.mixolo.R
 import fr.willban.mixolo.data.model.LocalMachine
-import fr.willban.mixolo.data.model.RemoteMachine
 import fr.willban.mixolo.ui.activities.machine.MachineDetailActivity
 import fr.willban.mixolo.ui.activities.qrcodes.QrCodesManagerActivity
 import fr.willban.mixolo.ui.activities.signin.SignInActivity
 import fr.willban.mixolo.util.findParameterValue
 import fr.willban.mixolo.util.showShortToast
-import fr.willban.mixolo.util.toInt
 import fr.willban.mixolo.util.tryToInt
 import io.github.g00fy2.quickie.QRResult.*
 import io.github.g00fy2.quickie.ScanCustomCode

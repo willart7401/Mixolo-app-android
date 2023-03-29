@@ -72,4 +72,7 @@ dependencies {
 
     //QR Code encoder
     implementation("io.github.g0dkar:qrcode-kotlin-android:3.3.0")
+
+    //WIFI
+    implementation("io.github.thanosfisherman.wifiutils:wifiutils:1.6.6")
 }
