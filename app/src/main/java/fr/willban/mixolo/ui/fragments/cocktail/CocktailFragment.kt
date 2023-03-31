@@ -108,7 +108,7 @@ class CocktailFragment : Fragment() {
                     for (ingredient in cocktail.ingredients ?: emptyList()) {
                         val container = containers.find { it.name == ingredient.name }
 
-                        if (container == null || (container.remainingAmount ?: 0) < quantity * (ingredient.amount ?: 0)) {
+                        if (container == null || (container.remainingAmount ?: 0) < quantity * (ingredient.amount ?: 0) / 100) {
                             editText.error = "Pas assez de ${ingredient.name} pour cette quantité"
                             break
                         }
@@ -149,7 +149,7 @@ class CocktailFragment : Fragment() {
 
         alertDialog = AlertDialog.Builder(requireContext())
             .setCancelable(false)
-            .setTitle(getString(R.string.container_name))
+            .setTitle(getString(R.string.add_cocktail))
             .setView(view)
             .setPositiveButton(getString(R.string.add)) { _, _ ->
                 createCocktail(cocktailName.text.toString(), adapter.tmpIngredients)

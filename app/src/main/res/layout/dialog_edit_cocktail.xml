@@ -13,7 +13,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
         android:autofillHints=""
-        android:hint="@string/machine_name"
+        android:hint="@string/cocktail_name"
         android:inputType="textCapSentences"
         android:maxLength="140"
         android:maxLines="1" />

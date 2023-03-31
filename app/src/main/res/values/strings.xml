@@ -32,4 +32,5 @@
     <string name="enter_cocktail_quantity">Veuilez entrer la quantité de cocktail désiré (en cl)</string>
     <string name="launch">Lancer</string>
     <string name="configure_wifi">Configure wifi</string>
+    <string name="cocktail_name">Nom du cocktail</string>
 </resources>

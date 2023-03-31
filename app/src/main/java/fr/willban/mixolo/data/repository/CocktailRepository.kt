@@ -48,14 +48,14 @@ object CocktailRepository {
         cocktails.value = listOf(
             Cocktail(
                 1, "Sex on the beach", listOf(
-                    Ingredient(1, "Voodka", 5),
+                    Ingredient(1, "Vodka", 5),
                     Ingredient(2, "Jus d'ananas", 5),
                     Ingredient(3, "Jus de cramberry", 15)
                 )
             ),
             Cocktail(
                 2, "Punch", listOf(
-                    Ingredient(1, "Voodka", 5),
+                    Ingredient(1, "Vodka", 5),
                     Ingredient(2, "Jus d'ananas", 10),
                     Ingredient(3, "Jus de cramberry", 10)
                 )
