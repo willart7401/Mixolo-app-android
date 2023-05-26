@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import fr.willban.mixolo.data.model.Cocktail
 import fr.willban.mixolo.data.model.Container
 import fr.willban.mixolo.data.usecase.cocktail.AddCocktail
+import fr.willban.mixolo.data.usecase.cocktail.DeleteCocktail
 import fr.willban.mixolo.data.usecase.cocktail.GetCocktails
 import fr.willban.mixolo.data.usecase.cocktail.StartCocktail
 import fr.willban.mixolo.data.usecase.container.GetContainers
@@ -15,6 +16,7 @@ class CocktailViewModel : ViewModel() {
     private val startCocktailUseCase = StartCocktail()
     private val getCocktailsUseCase = GetCocktails()
     private val addCocktailUseCase = AddCocktail()
+    private val deleteCocktailUseCase = DeleteCocktail()
     private val getCurrentMachinesUseCase = GetCurrentMachine()
     private val getContainersUseCase = GetContainers()
 
@@ -30,7 +32,8 @@ class CocktailViewModel : ViewModel() {
     }
 
     fun addCocktail(cocktail: Cocktail) {
-        addCocktailUseCase.invoke(cocktail)
+        val machineId = getCurrentMachinesUseCase.invoke()
+        machineId?.let { addCocktailUseCase.invoke(it, cocktail) }
     }
 
     fun getContainersAndIngredients(onSuccess: (List<Container>, List<String>) -> Unit) {
@@ -40,5 +43,10 @@ class CocktailViewModel : ViewModel() {
                 onSuccess(containers, ingredients)
             }
         }
+    }
+
+    fun delete(cocktail: Cocktail) {
+        val machineId = getCurrentMachinesUseCase.invoke()
+        machineId?.let { deleteCocktailUseCase.invoke(it, cocktail) }
     }
 }

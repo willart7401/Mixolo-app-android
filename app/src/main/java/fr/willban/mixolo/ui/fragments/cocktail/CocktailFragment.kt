@@ -37,6 +37,8 @@ class CocktailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(requireActivity())[CocktailViewModel::class.java]
+
+        requireActivity().title = "Capacités"
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -70,7 +72,7 @@ class CocktailFragment : Fragment() {
         }
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = CocktailAdapter(::startCocktail)
+        adapter = CocktailAdapter(::startCocktail, ::onLongClickListener)
         recyclerView.adapter = adapter
     }
 
@@ -165,6 +167,10 @@ class CocktailFragment : Fragment() {
 
     private fun togglePositiveButton(alertDialog: AlertDialog?, isCompleted: Boolean) {
         alertDialog?.getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = isCompleted
+    }
+
+    private fun onLongClickListener(cocktail: Cocktail) {
+        viewModel.delete(cocktail)
     }
 
     private fun createCocktail(cocktailName: String, tmpIngredients: HashMap<Int, TmpIngredient>) {

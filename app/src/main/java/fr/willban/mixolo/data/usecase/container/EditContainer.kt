@@ -10,4 +10,8 @@ class EditContainer {
     fun invoke(machineId: String, container: Container) {
         containerRepository.editContainer(machineId, container)
     }
+
+    fun purge(machineId: String, container: Container) {
+        containerRepository.purgeContainer(machineId, container)
+    }
 }

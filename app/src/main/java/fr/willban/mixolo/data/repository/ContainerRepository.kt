@@ -24,4 +24,10 @@ object ContainerRepository {
             }
         }
     }
+
+    fun purgeContainer(machineId: String, container: Container) {
+        container.purging = true
+        val childUpdates = mapOf<String, Any>("/machines/$machineId/containers/${container.id}" to container)
+        database.updateChildren(childUpdates)
+    }
 }

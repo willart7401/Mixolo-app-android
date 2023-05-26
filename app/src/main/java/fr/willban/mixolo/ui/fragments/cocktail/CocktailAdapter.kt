@@ -5,12 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import fr.willban.mixolo.R
 import fr.willban.mixolo.data.model.Cocktail
 import fr.willban.mixolo.util.prettyPrint
 
-class CocktailAdapter(private val onClickListener: (Cocktail) -> Unit) : RecyclerView.Adapter<CocktailAdapter.ViewHolder>() {
+class CocktailAdapter(private val onClickListener: (Cocktail) -> Unit, private val onLongClickListener: (Cocktail) -> Unit) :
+    RecyclerView.Adapter<CocktailAdapter.ViewHolder>() {
 
     private var cocktails: List<Cocktail> = emptyList()
 
@@ -29,6 +31,11 @@ class CocktailAdapter(private val onClickListener: (Cocktail) -> Unit) : Recycle
         holder.playButton.setOnClickListener {
             onClickListener(cocktail)
         }
+
+        holder.cardView.setOnLongClickListener {
+            onLongClickListener(cocktail)
+            true
+        }
     }
 
     fun refreshMachines(cocktails: List<Cocktail>) {
@@ -40,5 +47,6 @@ class CocktailAdapter(private val onClickListener: (Cocktail) -> Unit) : Recycle
         val playButton: ImageView = itemView.findViewById(R.id.item_cocktail_play)
         val name: TextView = itemView.findViewById(R.id.item_cocktail_name)
         val ingredients: TextView = itemView.findViewById(R.id.item_cocktail_ingredients)
+        val cardView: CardView = itemView.findViewById(R.id.item_cocktail_root)
     }
 }

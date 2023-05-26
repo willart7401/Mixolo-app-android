@@ -24,4 +24,10 @@ class ContainerViewModel : ViewModel() {
             editContainerUseCase.invoke(machineId, container)
         }
     }
+
+    fun purgeContainer(container: Container) {
+        getCurrentMachinesUseCase.invoke()?.let { machineId ->
+            editContainerUseCase.purge(machineId, container)
+        }
+    }
 }

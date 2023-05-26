@@ -6,13 +6,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutParams
+import com.google.android.material.card.MaterialCardView
 import fr.willban.mixolo.R
 import fr.willban.mixolo.data.model.Container
 import fr.willban.mixolo.util.px
 import fr.willban.mixolo.util.wave.MultiWaveHeader
 import java.lang.Float.min
 
-class ContainerAdapter(private val onClickListener: (Container) -> Unit) : RecyclerView.Adapter<ContainerAdapter.ViewHolder>() {
+class ContainerAdapter(private val onClickListener: (Container) -> Unit, private val onPurgeClickListener: (Container) -> Unit) : RecyclerView.Adapter<ContainerAdapter.ViewHolder>() {
 
     private var containers: List<Container> = emptyList()
 
@@ -41,6 +42,10 @@ class ContainerAdapter(private val onClickListener: (Container) -> Unit) : Recyc
         holder.itemView.setOnClickListener {
             onClickListener(container)
         }
+
+        holder.purge.setOnClickListener {
+            onPurgeClickListener(container)
+        }
     }
 
     fun refreshMachines(containers: List<Container>) {
@@ -52,5 +57,6 @@ class ContainerAdapter(private val onClickListener: (Container) -> Unit) : Recyc
         val waterWaveView: MultiWaveHeader = itemView.findViewById(R.id.water_wave_view)
         val containerId: TextView = itemView.findViewById(R.id.item_capacity_id)
         val textView: TextView = itemView.findViewById(R.id.item_capacity_name)
+        val purge: MaterialCardView = itemView.findViewById(R.id.purge)
     }
 }

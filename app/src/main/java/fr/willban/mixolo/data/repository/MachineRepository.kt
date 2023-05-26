@@ -98,7 +98,7 @@ object MachineRepository {
         val list = mutableListOf<Container>()
 
         for (id in 0 until containerNb) {
-            list.add(Container(id, "", containerCapacity, 0))
+            list.add(Container(id, "", false,  containerCapacity, 0))
         }
 
         return list
